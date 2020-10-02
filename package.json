@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/sirSayed98/e-commerce#readme",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1"
   },
   "devDependencies": {
