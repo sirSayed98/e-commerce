@@ -1,0 +1,28 @@
+{
+  "name": "e-commerce",
+  "version": "1.0.0",
+  "description": "e-commerce website using nodeJs and mongoDB",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sirSayed98/e-commerce.git"
+  },
+  "keywords": [
+    "nodeJs",
+    "mongoDB",
+    "backend",
+    "APIs"
+  ],
+  "author": "mohamed sayed",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sirSayed98/e-commerce/issues"
+  },
+  "homepage": "https://github.com/sirSayed98/e-commerce#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
