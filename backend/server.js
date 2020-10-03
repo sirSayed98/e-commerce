@@ -2,7 +2,9 @@ const express = require('express');
 const app = express();
 const colors = require('colors');
 const dotenv = require('dotenv');
-const connectDB = require('./config/db')
+const connectDB = require('./config/db');
+const errorHandler = require('./middleware/error');
+
 
 //import routers
 const ProductRouter = require('./routes/product');
@@ -15,9 +17,13 @@ dotenv.config('.env');
 connectDB();
 
 //mounting routers
-app.use('/api/products', ProductRouter)
+app.use('/api/v1/products', ProductRouter)
 
 
+
+
+//errorHandler
+app.use(errorHandler);
 
 const Port = process.env.PORT || 5000;
 app.listen(Port, () => {
