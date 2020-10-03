@@ -1,13 +1,21 @@
 const express = require('express');
 const app = express();
-const colors =require('colors');
+const colors = require('colors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db')
+
+//import routers
+const ProductRouter = require('./routes/product');
+
+
 dotenv.config('.env');
+
 
 // Connect to db
 connectDB();
 
+//mounting routers
+app.use('/api/products', ProductRouter)
 
 
 
