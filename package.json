@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/sirSayed98/e-commerce#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
