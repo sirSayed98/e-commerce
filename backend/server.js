@@ -4,6 +4,7 @@ const colors = require('colors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/error');
+const CORS = require('cors')
 
 
 //import routers
@@ -15,6 +16,9 @@ dotenv.config('.env');
 
 // Connect to db
 connectDB();
+
+// Enable CORS
+app.use(CORS());
 
 //mounting routers
 app.use('/api/v1/products', ProductRouter)
