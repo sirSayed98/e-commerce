@@ -9,7 +9,8 @@ const CORS = require('cors')
 
 //import routers
 const ProductRouter = require('./routes/product');
-
+const users = require('./routes/user');
+const auth = require('./routes/auth');
 
 dotenv.config('.env');
 
@@ -20,9 +21,13 @@ connectDB();
 // Enable CORS
 app.use(CORS());
 
+// Body parser
+app.use(express.json());
+
 //mounting routers
 app.use('/api/v1/products', ProductRouter)
-
+app.use('/api/v1/auth/users', users);
+app.use('/api/v1/auth', auth);
 
 
 

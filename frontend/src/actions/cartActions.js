@@ -3,7 +3,6 @@ import { CART_ADD_ITEM, CART_REMOVE_ITEM } from '../constants/cartConstants/type
 import { GET_PRODUCT } from '../constants/cartConstants/endPoints'
 export const addToCart = (id, qty) => async (dispatch, getState) => {
     const { data } = await axios.get(GET_PRODUCT + id)
-
     dispatch({
         type: CART_ADD_ITEM,
         payload: {
@@ -15,6 +14,8 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
             qty,
         },
     })
+    //call cartReducer first 
+    //then set--> cartItems
 
     localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
 }
