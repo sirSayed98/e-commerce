@@ -70,12 +70,14 @@ const sendTokenResponse = (user, statusCode, req, res) => {
         secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
     };
 
-
     res
         .status(statusCode)
         .cookie('token', token, options)
         .json({
             success: true,
+            role: user.role,
+            email: user.email,
+            name: user.name,
             token
         });
 
