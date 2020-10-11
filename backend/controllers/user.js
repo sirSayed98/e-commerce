@@ -1,6 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../models/User');
-
+const bcrypt = require('bcryptjs');
 
 // @desc      Get all users
 // @route     GET /api/v1/auth/users
@@ -41,15 +41,21 @@ exports.createUser = asyncHandler(async (req, res, next) => {
 // @route     PUT /api/v1/auth/users/:id
 // @access    Private/Admin
 exports.updateUser = asyncHandler(async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true
-  });
+  const user = await User.findById(req.user._id)
 
-  res.status(200).json({
-    success: true,
-    data: user
-  });
+  if (user) {
+    user.name = req.body.name || user.name
+    user.email = req.body.email || user.email
+    if (req.body.password) {
+      user.password = req.body.password
+    }
+
+    const updatedUser = await user.save()
+    res.json({
+      success: true,
+      data: updatedUser
+    })
+  } 
 });
 
 // @desc      Delete user

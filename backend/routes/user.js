@@ -17,8 +17,14 @@ const { protect, authorize } = require('../middleware/auth');
 router
   .route('/')
   .post(createUser);
-  
+
+
 router.use(protect);
+router
+  .route('/:id')
+  .put(updateUser)
+  .get(getUser)
+  .put(updateUser)
 router.use(authorize('admin'));
 
 router
@@ -28,8 +34,6 @@ router
 
 router
   .route('/:id')
-  .get(getUser)
-  .put(updateUser)
   .delete(deleteUser);
 
 

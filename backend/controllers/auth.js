@@ -69,7 +69,6 @@ const sendTokenResponse = (user, statusCode, req, res) => {
         httpOnly: true,
         secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
     };
-
     res
         .status(statusCode)
         .cookie('token', token, options)
@@ -78,6 +77,7 @@ const sendTokenResponse = (user, statusCode, req, res) => {
             role: user.role,
             email: user.email,
             name: user.name,
+            id:user._id,
             token
         });
 
