@@ -1,0 +1,1 @@
+export const MAKE_ORDER = 'http://localhost:5000/api/v1/order'

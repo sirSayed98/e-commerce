@@ -11,6 +11,7 @@ const CORS = require('cors')
 const ProductRouter = require('./routes/product');
 const users = require('./routes/user');
 const auth = require('./routes/auth');
+const order=require('./routes/order')
 
 dotenv.config('.env');
 
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use('/api/v1/products', ProductRouter)
 app.use('/api/v1/auth/users', users);
 app.use('/api/v1/auth', auth);
+app.use('/api/v1/order', order);
 
 
 
