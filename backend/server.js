@@ -31,7 +31,10 @@ app.use('/api/v1/auth/users', users);
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/order', order);
 
-
+//get Paypal_client_id
+app.get('/api/v1/config/paypal', (req, res) =>
+  res.send(process.env.PAYPAL_CLIENT_ID)
+)
 
 //errorHandler
 app.use(errorHandler);
