@@ -40,7 +40,7 @@ exports.addOrderItems = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Get order by ID
-// @route   GET /api/orders/:id
+// @route   GET /api/order/:id
 // @access  Private
 exports.getOrderById = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id).populate(
@@ -52,5 +52,30 @@ exports.getOrderById = asyncHandler(async (req, res) => {
     res.json(order);
   } else {
     return next(new ErrorResponse("no Items found", 404));
+  }
+});
+
+// @desc    Update order to paid
+// @route   GET /api/order/:id/pay
+// @access  Private
+exports.updateOrderToPaid = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (order) {
+    order.isPaid = true;
+    order.paidAt = Date.now();
+    order.paymentResult = {
+      id: req.body.id,
+      status: req.body.status,
+      update_time: req.body.update_time,
+      email_address: req.body.payer.email_address,
+    };
+
+    const updatedOrder = await order.save();
+
+    res.json(updatedOrder);
+  } else {
+    return next(new ErrorResponse("Order not found", 404));
+  
   }
 });
