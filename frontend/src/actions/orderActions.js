@@ -6,8 +6,12 @@ import {
   ORDER_DETAILS_FAIL,
   ORDER_DETAILS_SUCCESS,
   ORDER_DETAILS_REQUEST,
+  RESET_ORDER_FLAGS,
 } from "../constants/ordersConstants/types";
 
+import {
+  RESET_CART_CONTENT
+} from "../constants/cartConstants/types"
 import {
   MAKE_ORDER,
   GET_ORDER_BY_ID,
@@ -32,10 +36,23 @@ export const createOrder = (order) => async (dispatch, getState) => {
 
     const { data } = await axios.post(MAKE_ORDER, order, config);
 
+    //cartItems should be deleted after sucessful order
+    localStorage.removeItem("cartItems");
+    dispatch({
+      type: RESET_CART_CONTENT,
+     
+    });
+
     dispatch({
       type: ORDER_CREATE_SUCCESS,
       payload: data,
     });
+    setTimeout(() => {
+      dispatch({
+        type: RESET_ORDER_FLAGS,
+        payload: data,
+      });
+    }, 2000);
   } catch (error) {
     dispatch({
       type: ORDER_CREATE_FAIL,
