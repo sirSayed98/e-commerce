@@ -13,6 +13,7 @@ import {
   ORDER_LIST_MY_REQUEST,
   ORDER_LIST_MY_SUCCESS,
   ORDER_LIST_MY_FAIL,
+  ORDER_LIST_MY_RESET,
 } from "../constants/ordersConstants/types";
 
 export const orderCreateReducer = (state = {}, action) => {
@@ -41,11 +42,7 @@ export const orderCreateReducer = (state = {}, action) => {
       return state;
   }
 };
-export const orderDetailsReducer = (
-  state = { loading: true },
-  action
-) => {
-
+export const orderDetailsReducer = (state = { loading: true }, action) => {
   switch (action.type) {
     case ORDER_DETAILS_REQUEST:
       return {
@@ -93,18 +90,20 @@ export const orderListMyReducer = (state = { orders: [] }, action) => {
     case ORDER_LIST_MY_REQUEST:
       return {
         loading: true,
-      }
+      };
     case ORDER_LIST_MY_SUCCESS:
       return {
         loading: false,
         orders: action.payload,
-      }
+      };
     case ORDER_LIST_MY_FAIL:
       return {
         loading: false,
         error: action.payload,
-      }
+      };
+    case ORDER_LIST_MY_RESET:
+      return { orders: [] };
     default:
-      return state
+      return state;
   }
-}
+};
