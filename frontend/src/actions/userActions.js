@@ -16,6 +16,9 @@ import {
   USER_UPDATE_PROFILE_SUCCESS,
   USER_DETAILS_RESET,
   REST_USER_FLAGS,
+  USER_LIST_FAIL,
+  USER_LIST_SUCCESS,
+  USER_LIST_REQUEST,
 } from "../constants/userConstants/types";
 
 import { RESET_CART_CONTENT } from "../constants/cartConstants/types";
@@ -23,6 +26,7 @@ import { ORDER_LIST_MY_RESET } from "../constants/ordersConstants/types";
 import {
   USER_LOGIN,
   USER_REGISTER,
+  USERS_LIST,
 } from "../constants/userConstants/endPoints";
 
 export const login = (email, password) => async (dispatch) => {
@@ -63,7 +67,6 @@ export const logout = () => (dispatch) => {
   dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: ORDER_LIST_MY_RESET });
   dispatch({ type: RESET_CART_CONTENT });
-  
 };
 export const register = (name, email, password) => async (dispatch) => {
   try {
@@ -170,6 +173,39 @@ export const updateUserProfile = (user, id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_UPDATE_PROFILE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listUsers = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_LIST_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(USERS_LIST, config);
+
+    dispatch({
+      type: USER_LIST_SUCCESS,
+      payload: data.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
