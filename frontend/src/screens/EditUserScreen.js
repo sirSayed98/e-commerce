@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
-import { getUserDetails } from "../actions/userActions";
+import { getUserDetails, updateUserProfile } from "../actions/userActions";
 
 const UserEditScreen = ({ match, history }) => {
   const userId = match.params.id;
@@ -19,6 +19,8 @@ const UserEditScreen = ({ match, history }) => {
   const userDetails = useSelector((state) => state.userDetails);
   const { loading, error, user } = userDetails;
 
+  const userUpdate = useSelector((state) => state.userUpdateProfile);
+  const { success: sucUpdated } = userUpdate;
   useEffect(() => {
     if (!user.name || user._id !== userId) {
       dispatch(getUserDetails(userId));
@@ -31,16 +33,21 @@ const UserEditScreen = ({ match, history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
+    var userObj = {};
+    userObj.name = name;
+    userObj.email = email;
+    userObj.role = isAdmin ? "admin" : "user";
+    dispatch(updateUserProfile(userObj, userId));
   };
 
   return (
     <>
-      <button onClick={() => console.log(userDetails)}>Test</button>
       <Link to="/admin/userlist" className="btn btn-light my-3">
         Go Back
       </Link>
       <FormContainer>
         <h1>Edit User</h1>
+        {sucUpdated && <Message variant="success">Edit Done </Message>}
         {loading ? (
           <Loader />
         ) : error ? (

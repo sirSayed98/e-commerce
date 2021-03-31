@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
-const ErrorResponse = require('../utils/errorResponse');
-const User = require('../models/User');
-const asyncHandler = require('express-async-handler');
+const jwt = require("jsonwebtoken");
+const ErrorResponse = require("../utils/errorResponse");
+const User = require("../models/User");
+const asyncHandler = require("express-async-handler");
 
 // Protect routes
 exports.protect = asyncHandler(async (req, res, next) => {
@@ -9,15 +9,14 @@ exports.protect = asyncHandler(async (req, res, next) => {
 
   if (req.headers.cookie) {
     // Set token from Bearer token in header
-    token = req.headers.cookie.split('=')[1];
-  }
-  else if (req.headers.authorization.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
+    token = req.headers.cookie.split("=")[1];
+  } else if (req.headers.authorization.startsWith("Bearer")) {
+    token = req.headers.authorization.split(" ")[1];
   }
 
   // Make sure token exists
   if (!token) {
-    return next(new ErrorResponse('Not authorized to access this route', 401));
+    return next(new ErrorResponse("Not authorized to access this route", 401));
   }
 
   // Verify token
@@ -26,14 +25,18 @@ exports.protect = asyncHandler(async (req, res, next) => {
   const currentUser = await User.findById(decoded.id);
 
   if (!currentUser) {
-    return next(new ErrorResponse('The user belonging to this token does no longer exist.', 401))
+    return next(
+      new ErrorResponse(
+        "The user belonging to this token does no longer exist.",
+        401
+      )
+    );
   }
 
   req.user = currentUser;
   res.locals.user = currentUser;
   next();
 });
-
 
 // Grant access to specific roles
 exports.authorize = (...roles) => {

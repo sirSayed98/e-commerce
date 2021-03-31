@@ -31,6 +31,7 @@ import {
   USER_LOGIN,
   USER_REGISTER,
   USERS_LIST,
+  USER_UPDATE,
 } from "../constants/userConstants/endPoints";
 
 export const login = (email, password) => async (dispatch) => {
@@ -146,7 +147,11 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
   }
 };
 
-export const updateUserProfile = (user, id) => async (dispatch, getState) => {
+export const updateUserProfile = (user, id) => async (
+  dispatch,
+  getState
+) => {
+  
   try {
     dispatch({
       type: USER_UPDATE_PROFILE_REQUEST,
@@ -163,8 +168,9 @@ export const updateUserProfile = (user, id) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.put(USER_REGISTER + id, user, config);
+    const { data } = await axios.put(USER_UPDATE+id, user, config);
 
+   
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,
       payload: data,
@@ -175,6 +181,7 @@ export const updateUserProfile = (user, id) => async (dispatch, getState) => {
       });
     }, 3000);
   } catch (error) {
+    console.log("_______Error______", error.response);
     dispatch({
       type: USER_UPDATE_PROFILE_FAIL,
       payload:
