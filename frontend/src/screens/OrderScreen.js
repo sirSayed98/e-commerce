@@ -11,6 +11,7 @@ import { getOrderDetails, payOrder } from "../actions/orderActions";
 import { ORDER_PAY_RESET } from "../constants/ordersConstants/types";
 import { PAY_PAL_CLIENT_ID } from "../constants/ordersConstants/endPoints";
 
+import { GENERAL_HOST } from "../constants/general";
 const OrderScreen = ({ match }) => {
   const orderId = match.params.id;
 
@@ -116,7 +117,7 @@ const OrderScreen = ({ match }) => {
                       <Row>
                         <Col md={1}>
                           <Image
-                            src={item.image}
+                            src={GENERAL_HOST+item.image}
                             alt={item.name}
                             fluid
                             rounded

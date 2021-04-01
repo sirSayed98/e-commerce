@@ -11,6 +11,7 @@ import Message from "../components/Message";
 import CheckoutSteps from "../components/CheckoutSteps";
 
 import { createOrder } from "../actions/orderActions";
+import { GENERAL_HOST } from "../constants/general";
 const PlaceOrderScreen = ({ history }) => {
   const cart = useSelector((state) => state.cart);
 
@@ -94,7 +95,7 @@ const PlaceOrderScreen = ({ history }) => {
                       <Row>
                         <Col md={2}>
                           <Image
-                            src={item.image}
+                            src={GENERAL_HOST+item.image}
                             alt={item.name}
                             fluid
                             rounded
