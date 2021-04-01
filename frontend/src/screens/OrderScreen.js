@@ -2,13 +2,20 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
 import { Link } from "react-router-dom";
-import { Row, Col, ListGroup, Image, Card } from "react-bootstrap";
+import { Row, Col, ListGroup, Image, Card, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 
-import { getOrderDetails, payOrder } from "../actions/orderActions";
-import { ORDER_PAY_RESET } from "../constants/ordersConstants/types";
+import {
+  getOrderDetails,
+  payOrder,
+  deliverOrder,
+} from "../actions/orderActions";
+import {
+  ORDER_PAY_RESET,
+  ORDER_DELIVER_RESET,
+} from "../constants/ordersConstants/types";
 import { PAY_PAL_CLIENT_ID } from "../constants/ordersConstants/endPoints";
 
 import { GENERAL_HOST } from "../constants/general";
@@ -22,11 +29,18 @@ const OrderScreen = ({ match }) => {
 
   const [sdkReady, setSdkReady] = useState(false);
 
+  const [firstTime, setFirst] = useState(false);
+
   const orderPay = useSelector((state) => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay;
 
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   useEffect(() => {
-    
     const addPayPalScript = async () => {
       const { data: clientId } = await axios.get(PAY_PAL_CLIENT_ID);
       const script = document.createElement("script");
@@ -40,9 +54,10 @@ const OrderScreen = ({ match }) => {
       document.body.appendChild(script);
     };
 
-    if (!order || successPay) {
+    if (!order || successPay || successDeliver || !firstTime) {
+      setFirst(true);
+      dispatch({ type: ORDER_DELIVER_RESET });
       dispatch({ type: ORDER_PAY_RESET });
-
       dispatch(getOrderDetails(orderId));
     } else if (!order.isPaid) {
       if (!window.paypal) {
@@ -51,7 +66,7 @@ const OrderScreen = ({ match }) => {
         setSdkReady(true);
       }
     }
-  }, [dispatch, orderId, successPay, order]);
+  }, [dispatch, orderId, successPay, successDeliver, order, firstTime]);
 
   const successPaymentHandler = (paymentResult) => {
     console.log(paymentResult);
@@ -59,6 +74,9 @@ const OrderScreen = ({ match }) => {
     dispatch(payOrder(orderId, paymentResult));
   };
 
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order._id));
+  };
   return loading ? (
     <Loader />
   ) : error ? (
@@ -117,7 +135,7 @@ const OrderScreen = ({ match }) => {
                       <Row>
                         <Col md={1}>
                           <Image
-                            src={GENERAL_HOST+item.image}
+                            src={GENERAL_HOST + item.image}
                             alt={item.name}
                             fluid
                             rounded
@@ -181,9 +199,21 @@ const OrderScreen = ({ match }) => {
                       onError={(err) => {
                         alert(err);
                       }}
-                      
                     />
                   )}
+                </ListGroup.Item>
+              )}
+              {loadingDeliver && <Loader />}
+              {userInfo.role === "admin" && !order.isDelivered && (
+                <ListGroup.Item>
+                  <Button
+                    type="button"
+                    className="btn btn-block"
+                    onClick={deliverHandler}
+                    disabled={!order.isPaid ? true : false}
+                  >
+                    Mark As Delivered
+                  </Button>
                 </ListGroup.Item>
               )}
             </ListGroup>
