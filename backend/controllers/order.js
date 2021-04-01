@@ -76,7 +76,6 @@ exports.updateOrderToPaid = asyncHandler(async (req, res) => {
     res.json(updatedOrder);
   } else {
     return next(new ErrorResponse("Order not found", 404));
-  
   }
 });
 
@@ -84,7 +83,32 @@ exports.updateOrderToPaid = asyncHandler(async (req, res) => {
 // @route   GET /api/orders/myorders
 // @access  Private
 exports.getMyOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({ user: req.user._id })
-  res.json(orders)
-})
+  const orders = await Order.find({ user: req.user._id });
+  res.json(orders);
+});
 
+// @desc    Update order to delivered
+// @route   GET /api/orders/:id/deliver
+// @access  Private/Admin
+exports.updateOrderToDelivered = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (order) {
+    order.isDelivered = true;
+    order.deliveredAt = Date.now();
+
+    const updatedOrder = await order.save();
+
+    res.json(updatedOrder);
+  } else {
+    return next(new ErrorResponse("Order not found", 404));
+  }
+});
+
+// @desc    Get all orders
+// @route   GET /api/orders
+// @access  Private/Admin
+exports.getOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({}).populate("user", "id name");
+  res.json(orders);
+});
