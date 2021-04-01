@@ -59,15 +59,15 @@ exports.createProduct = asyncHandler(async (req, res) => {
     description,
   } = req.body;
   const product = new Product({
-    name: name,
-    price: price,
+    name: name || "some name",
+    price: price || 0,
     user: req.user._id,
-    image: image,
-    brand: brand,
-    category: category,
+    image: image || "/images/sample.jpg",
+    brand: brand || "brand",
+    category: category || "cate",
     countInStock: countInStock || 0,
     numReviews: 0,
-    description: description,
+    description: description || "URL",
   });
 
   const createdProduct = await product.save();
