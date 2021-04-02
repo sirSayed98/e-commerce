@@ -1,6 +1,7 @@
 const express = require("express");
 const asyncHandler = require("express-async-handler");
 const Product = require("../models/Product");
+const User = require("../models/User");
 const ErrorResponse = require("../utils/errorResponse");
 
 // @desc    Fetch all products
@@ -105,5 +106,61 @@ exports.updateProduct = asyncHandler(async (req, res) => {
     return next(
       new ErrorResponse(`Product with id of ${req.params.id} not found `, 404)
     );
+  }
+});
+
+// @desc    Create new review
+// @route   POST /api/products/:id/reviews
+// @access  Private
+exports.createProductReview = asyncHandler(async (req, res) => {
+  const { rating, comment, userID } = req.body;
+
+  const product = await Product.findById(req.params.id);
+
+  const user = await User.findById(req.user._id);
+
+  if (userID.toString() !== req.user._id.toString()) {
+    res.status(400);
+    res.send(`User of id ${userID} not submitted that review `);
+    return;
+  }
+  if (!user) {
+    res.status(404);
+    res.send(`User with id of ${req.user._id} not found `);
+    return;
+  }
+
+  if (product) {
+    const alreadyReviewed = product.reviews.find(
+      (r) => r.user.toString() === req.user._id.toString()
+    );
+
+    if (alreadyReviewed) {
+      res.status(400);
+      res.send(`Product with id of ${req.params.id} already reviewed `);
+      return;
+    }
+
+    const review = {
+      name: req.user.name,
+      rating: Number(rating),
+      comment,
+      user: req.user._id,
+    };
+
+    product.reviews.push(review);
+
+    product.numReviews = product.reviews.length;
+
+    product.rating =
+      product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+      product.reviews.length;
+
+    await product.save();
+    res.status(201).json({ message: "Review added" });
+  } else {
+    res.status(404);
+    res.send(`Product with id of ${req.params.id} not found `);
+    return;
   }
 });

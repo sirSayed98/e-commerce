@@ -5,14 +5,17 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/error");
 const CORS = require("cors");
-const path = require("path");
-const fileupload = require('express-fileupload'); //for fileupload
+const fileupload = require("express-fileupload"); //for fileupload
+
+
 //import routers
 const ProductRouter = require("./routes/product");
 const users = require("./routes/user");
 const auth = require("./routes/auth");
 const order = require("./routes/order");
 const uploadRoutes = require("./routes/uploadRoutes");
+
+const morgan = require("morgan");
 
 dotenv.config(".env");
 
@@ -21,6 +24,11 @@ connectDB();
 
 // Enable CORS
 app.use(CORS());
+
+//Morgan logger
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 
 // Body parser
 app.use(express.json());
@@ -41,8 +49,7 @@ app.use(fileupload());
 //image upload image
 app.use("/api/v1/upload", uploadRoutes);
 
-app.use(express.static('./public'));
-
+app.use(express.static("./public"));
 
 //errorHandler
 app.use(errorHandler);
