@@ -9,7 +9,18 @@ const ErrorResponse = require("../utils/errorResponse");
 // @access  Public
 
 exports.getProducts = asyncHandler(async (req, res, next) => {
-  const products = await Product.find({});
+
+  const keyword = req.query.keyword
+  ? {
+      name: {
+        $regex: req.query.keyword,
+        $options: 'i',
+      },
+    }
+  : {}
+
+const products = await Product.find({ ...keyword })
+  
 
   res.json(products);
 });
