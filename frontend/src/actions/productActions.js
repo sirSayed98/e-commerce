@@ -28,12 +28,16 @@ import {
   MAKE_PRODUCT_REVIEW,
 } from "../constants/productConstants/endPoints";
 
-export const listProducts = (keyword = "") => async (dispatch) => {
+export const listProducts = (keyword = "", pageNumber = "") => async (
+  dispatch
+) => {
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST });
 
-    const { data } = await axios.get(GET_PRODUCTS + `?keyword=${keyword}`);
-
+    const { data } = await axios.get(
+      GET_PRODUCTS + `?keyword=${keyword}&pageNumber=${pageNumber}`
+    );
+    
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
       payload: data,

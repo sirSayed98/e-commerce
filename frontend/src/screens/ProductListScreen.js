@@ -5,6 +5,7 @@ import { Table, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
+import Paginate from "../components/Paginate";
 import {
   listProducts,
   deleteProduct,
@@ -13,10 +14,11 @@ import {
 import { PRODUCT_CREATE_RESET } from "../constants/productConstants/types";
 
 const ProductListScreen = ({ history, match }) => {
+  const pageNumber = match.params.pageNumber || 1;
   const dispatch = useDispatch();
 
   const productList = useSelector((state) => state.productList);
-  const { loading, error, products } = productList;
+  const { loading, error, products, page, pages } = productList;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -39,14 +41,14 @@ const ProductListScreen = ({ history, match }) => {
   useEffect(() => {
     dispatch({ type: PRODUCT_CREATE_RESET });
     if (userInfo && userInfo.role === "admin") {
-      dispatch(listProducts());
+      dispatch(listProducts("", pageNumber));
     } else {
       history.push("/login");
     }
     if (successCreate) {
       history.push(`/admin/product/${createdProduct._id}/edit`);
     }
-  }, [dispatch, successCreate, history, userInfo, successDelete]);
+  }, [dispatch, successCreate, history, userInfo, successDelete, pageNumber]);
 
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure")) {
@@ -82,6 +84,7 @@ const ProductListScreen = ({ history, match }) => {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
+        <>
         <Table striped bordered hover responsive className="table-sm">
           <thead>
             <tr>
@@ -119,6 +122,8 @@ const ProductListScreen = ({ history, match }) => {
             ))}
           </tbody>
         </Table>
+        <Paginate pages={pages} page={page} isAdmin={true} />
+       </>
       )}
     </>
   );
