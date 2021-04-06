@@ -9,20 +9,23 @@ const ErrorResponse = require("../utils/errorResponse");
 // @access  Public
 
 exports.getProducts = asyncHandler(async (req, res, next) => {
+  const pageSize = 10;
+  const page = Number(req.query.pageNumber) || 1;
 
   const keyword = req.query.keyword
-  ? {
-      name: {
-        $regex: req.query.keyword,
-        $options: 'i',
-      },
-    }
-  : {}
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: "i",
+        },
+      }
+    : {};
+  const count = await Product.countDocuments({ ...keyword });
+  const products = await Product.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
 
-const products = await Product.find({ ...keyword })
-  
-
-  res.json(products);
+  res.json({ products, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc    Fetch single product
@@ -174,4 +177,12 @@ exports.createProductReview = asyncHandler(async (req, res) => {
     res.send(`Product with id of ${req.params.id} not found `);
     return;
   }
+});
+// @desc    Get top rated products
+// @route   GET /api/products/top
+// @access  Public
+exports.getTopProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3);
+
+  res.json(products);
 });
