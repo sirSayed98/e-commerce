@@ -9,7 +9,7 @@ const ErrorResponse = require("../utils/errorResponse");
 // @access  Public
 
 exports.getProducts = asyncHandler(async (req, res, next) => {
-  const pageSize = 10;
+  const pageSize = 6;
   const page = Number(req.query.pageNumber) || 1;
 
   const keyword = req.query.keyword
@@ -74,15 +74,15 @@ exports.createProduct = asyncHandler(async (req, res) => {
     description,
   } = req.body;
   const product = new Product({
-    name: name || "some name",
+    name: name || "Product Name",
     price: price || 0,
     user: req.user._id,
-    image: image || "/images/sample.jpg",
-    brand: brand || "brand",
-    category: category || "cate",
+    image: image || "Image",
+    brand: brand || "Brand",
+    category: category || "Category",
     countInStock: countInStock || 0,
     numReviews: 0,
-    description: description || "URL",
+    description: description || "Describtion",
   });
 
   const createdProduct = await product.save();
