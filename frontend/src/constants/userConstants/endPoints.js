@@ -1,4 +1,6 @@
-export const USER_LOGIN = "http://localhost:5000/api/v1/auth/login";
-export const USER_REGISTER = "http://localhost:5000/api/v1/auth/users/";
-export const USER_UPDATE = "http://localhost:5000/api/v1/auth/users/";
-export const USERS_LIST = "http://localhost:5000/api/v1/auth/users/";
+import { GENERAL_HOST } from "../general";
+
+export const USER_LOGIN = GENERAL_HOST + "/api/v1/auth/login";
+export const USER_REGISTER = GENERAL_HOST + "/api/v1/auth/users/";
+export const USER_UPDATE = GENERAL_HOST + "/api/v1/auth/users/";
+export const USERS_LIST = GENERAL_HOST + "/api/v1/auth/users/";

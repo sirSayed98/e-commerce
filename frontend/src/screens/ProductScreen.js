@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Meta from '../components/Meta'
+import Meta from "../components/Meta";
 import {
   Row,
   Col,
@@ -76,7 +76,7 @@ const ProductScreen = ({ history, match }) => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
-        <Meta title={product.name} />
+          <Meta title={product.name} />
           <Row>
             <Col md={6}>
               <Image
