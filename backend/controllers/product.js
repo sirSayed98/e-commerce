@@ -9,7 +9,7 @@ const ErrorResponse = require("../utils/errorResponse");
 // @access  Public
 
 exports.getProducts = asyncHandler(async (req, res, next) => {
-  const pageSize = 6;
+  const pageSize = 8;
   const page = Number(req.query.pageNumber) || 1;
 
   const keyword = req.query.keyword
