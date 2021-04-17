@@ -75,6 +75,7 @@ const OrderScreen = ({ match }) => {
   };
 
   const deliverHandler = () => {
+    console.log("________________")
     dispatch(deliverOrder(order._id));
   };
   return loading ? (
